@@ -3,33 +3,40 @@ import type { Note } from "../../types/note";
 import css from "./NoteList.module.css";
 import { deleteNote } from "../../lib/api";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { useState } from "react";
 
 interface NoteListProps {
     notes: Note[];
 };
 
 export default function NoteList({ notes }: NoteListProps) {
+    const [deletingId, setDeletingId] = useState<number | null>(null);
     const queryClient = useQueryClient();
-    const { mutate, isError, isPending } = useMutation({
+    const { mutate, isError, isSuccess } = useMutation({
         mutationFn: async (id: number) => deleteNote(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["notes"] });
+            setDeletingId(null);
+        },
+        onError: () => {
+            setDeletingId(null);
         }
     });
     const handleButton = (id: number) => {
+        setDeletingId(id);
         mutate(id);
     };
     return (
         <>
+            {isError && !isSuccess && <ErrorMessage text="There was an error, please try again..." />}
             <ul className={css.list}>
                 {notes.map(({ id, title, content, tag }) => (
                     <li className={css.listItem} key={id}>
                         <h2 className={css.title}>{title}</h2>
                         <p className={css.content}>{content}</p>
-                        {isError && <ErrorMessage text="There was an error, please try again..." />}
                         <div className={css.footer}>
                             <span className={css.tag}>{tag}</span>
-                            <button className={css.button} onClick={() => handleButton(id)} disabled={isPending}>Delete</button>
+                            <button className={css.button} onClick={() => handleButton(id)} disabled={deletingId === id}>{deletingId === id ? "Deleting..." : "Delete"}</button>
                         </div>
                     </li>
                 ))}

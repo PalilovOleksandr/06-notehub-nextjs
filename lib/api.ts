@@ -1,15 +1,10 @@
 import axios from 'axios';
-import { type CreateNote, type Note } from '../types/note';
+import { NotesHttpResponse, type CreateNote, type Note } from '../types/note';
 
 const myKey = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 axios.defaults.baseURL = 'https://notehub-public.goit.study/api';
 axios.defaults.headers.common['Authorization'] = `Bearer ${myKey}`;
-
-interface NotesHttpResponse {
-  notes: Note[];
-  totalPages: number;
-}
 
 export const fetchNotes = async (
   searchQuery: string,
