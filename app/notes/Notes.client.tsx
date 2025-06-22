@@ -9,12 +9,12 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import css from "./page.module.css";
 import { useDebounce } from "use-debounce";
-import { NotesHttpResponse } from "@/types/note";
+import { Note } from "@/types/note";
 
 type NoteClientProps = {
     query: string;
     page: number;
-    initialData: NotesHttpResponse;
+    initialData: { notes: Note[], totalPages: number };
 }
 
 const NotesClient = ({ query, page, initialData }: NoteClientProps) => {
