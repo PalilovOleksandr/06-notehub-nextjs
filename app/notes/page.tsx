@@ -14,13 +14,14 @@ const Notes = async () => {
         queryFn: () => fetchNotes(initialQuery, initialPage),
     });
 
-    const initalData = queryClient.getQueryData(['notes', initialQuery, initialQuery]) as NotesHttpResponse;
+    const initialData = queryClient.getQueryData(['notes', initialQuery, initialPage]) as NotesHttpResponse;
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <NotesClient query={initialQuery} page={initialPage} initialData={initalData} />
+            <NotesClient query={initialQuery} page={initialPage} initialData={initialData} />
         </HydrationBoundary>
     )
 };
 
 export default Notes;
+
 export const dynamic = 'force-dynamic';
