@@ -27,7 +27,12 @@ const NotesClient = ({ query, page, initialData }: NoteClientProps) => {
         queryKey: ["notes", debouncedQuery, currentPage],
         queryFn: () => fetchNotes(debouncedQuery, currentPage),
         placeholderData: keepPreviousData,
-        initialData: debouncedQuery === query && currentPage === page ? initialData : undefined,
+        initialData: () => {
+            if (debouncedQuery === query && currentPage === page) {
+                return initialData;
+            }
+            return undefined;
+        },
         refetchOnMount: false,
     });
 

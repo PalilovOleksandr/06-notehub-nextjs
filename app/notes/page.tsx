@@ -14,7 +14,7 @@ const Notes = async () => {
         queryFn: () => fetchNotes(initialQuery, initialPage),
     });
 
-    const initialData = queryClient.getQueryData(['notes', initialQuery, initialPage]) as NotesHttpResponse;
+    const initialData = queryClient.getQueryData(["notes", initialQuery, initialPage]) as NotesHttpResponse;
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <NotesClient query={initialQuery} page={initialPage} initialData={initialData} />
