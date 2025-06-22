@@ -4,6 +4,7 @@ import css from "./NoteList.module.css";
 import { deleteNote } from "../../lib/api";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { useState } from "react";
+import Link from "next/link";
 
 interface NoteListProps {
     notes: Note[];
@@ -36,6 +37,7 @@ export default function NoteList({ notes }: NoteListProps) {
                         <p className={css.content}>{content}</p>
                         <div className={css.footer}>
                             <span className={css.tag}>{tag}</span>
+                            <Link href={`/notes/${id}`} className={css.link}>View details</Link>
                             <button className={css.button} onClick={() => handleButton(id)} disabled={deletingId === id}>{deletingId === id ? "Deleting..." : "Delete"}</button>
                         </div>
                     </li>

@@ -6,10 +6,11 @@ const myKey = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 axios.defaults.baseURL = 'https://notehub-public.goit.study/api';
 axios.defaults.headers.common['Authorization'] = `Bearer ${myKey}`;
 
-export interface NotesHttpResponse {
+interface NotesHttpResponse {
   notes: Note[];
   totalPages: number;
 }
+
 export const fetchNotes = async (
   searchQuery: string,
   page: number
@@ -32,4 +33,9 @@ export const createNote = async (noteData: CreateNote): Promise<Note> => {
 export const deleteNote = async (noteId: number): Promise<Note> => {
   const response = await axios.delete<Note>(`/notes/${noteId}`);
   return response.data;
+};
+
+export const fetchNoteById = async (id: number): Promise<Note> => {
+  const { data } = await axios.get<Note>(`/notes/${id}`);
+  return data;
 };

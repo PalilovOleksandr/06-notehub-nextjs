@@ -31,7 +31,7 @@ const Error = ({ error, reset }: ErrorProps) => {
                 borderRadius: "4px",
                 cursor: "pointer",
                 transition: "background-color 0.2s ease",
-            }} onClick={reset}>Спробувати знову</button >
+            }} onClick={reset}>Try again</button >
         </div>
     );
 };
