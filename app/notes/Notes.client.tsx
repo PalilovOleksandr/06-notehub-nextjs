@@ -9,17 +9,25 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import css from "./page.module.css";
 import { useDebounce } from "use-debounce";
+import { NotesHttpResponse } from "@/types/note";
 
-const NotesClient = () => {
-    const [currentPage, setCurrentPage] = useState<number>(1);
+type NoteClientProps = {
+    query: string;
+    page: number;
+    initialData: NotesHttpResponse;
+}
+
+const NotesClient = ({ query, page, initialData }: NoteClientProps) => {
+    const [currentPage, setCurrentPage] = useState<number>(page);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState<string>(query);
     const [debouncedQuery] = useDebounce(searchQuery, 300);
 
-    const { data, isSuccess, error } = useQuery({
+    const { data, isSuccess, error, isError } = useQuery({
         queryKey: ["notes", debouncedQuery, currentPage],
         queryFn: () => fetchNotes(debouncedQuery, currentPage),
         placeholderData: keepPreviousData,
+        initialData: debouncedQuery === query && currentPage === page ? initialData : undefined,
         refetchOnMount: false,
     });
 
@@ -27,7 +35,7 @@ const NotesClient = () => {
         setCurrentPage(1);
     }, [debouncedQuery]);
 
-    if (error || !data?.notes) return <p>Could not fetch the list of notes. {error?.message}</p>;
+    if (isError) throw error;
 
     function handleSearchChange(query: string) {
         setSearchQuery(query)
