@@ -7,16 +7,18 @@ import { fetchNoteById } from "@/lib/api";
 
 const NoteDetailsClient = () => {
     const { id } = useParams<{ id: string }>();
+    const parseId = Number(id);
 
     const { data: note, isLoading, error } = useQuery({
-        queryKey: ['note', id],
-        queryFn: () => fetchNoteById(Number(id)),
+        queryKey: ['note', parseId],
+        queryFn: () => fetchNoteById(parseId),
         refetchOnMount: false,
     });
     if (isLoading) return <p>Loading, please wait...</p>;
-    if (error || !note) return <p>Something went wrong.</p>;
+    if (error) return <p>Something went wrong.</p>;
+    if (!note) return <p>Sorry, note not found.</p>
 
-    const formatteDate = note.updatedAt ? `Updated at: ${note.updatedAt}` : `Created at: ${note.createdAt}`;
+    const formattedDate = note.updatedAt ? `Updated at: ${note.updatedAt}` : `Created at: ${note.createdAt}`;
     return (
         <>
             {note && <div className={css.container}>
@@ -26,7 +28,7 @@ const NoteDetailsClient = () => {
                         <button className={css.editBtn}>Edit note</button>
                     </div>
                     <p className={css.content}>{note.content}</p>
-                    <p className={css.date}>{formatteDate}</p>
+                    <p className={css.date}>{formattedDate}</p>
                 </div>
             </div>}
         </>
